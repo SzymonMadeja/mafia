@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mafia Discord - Kompendium Gry</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e24;
+            --text-main: #e0e0e0;
+            --text-muted: #9e9e9e;
+            --good-color: #4caf50;
+            --evil-color: #f44336;
+            --neutral-color: #ffb300;
+            --accent-color: #5865F2; /* Discord Blurple */
+            --info-color: #03a9f4;
+            --dm-color: #eb459e; /* Fuksja dla wyróżnienia DM */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(180deg, #1a1a2e 0%, var(--bg-color) 100%);
+            border-bottom: 2px solid #333;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 2px solid #333;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--accent-color);
+            background-color: #252530;
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 60px 20px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .good-title { color: var(--good-color); border-bottom-color: var(--good-color); }
+        .evil-title { color: var(--evil-color); border-bottom-color: var(--evil-color); }
+        .neutral-title { color: var(--neutral-color); border-bottom-color: var(--neutral-color); }
+        .info-title { color: var(--info-color); border-bottom-color: var(--info-color); }
+        .dm-title { color: var(--dm-color); border-bottom-color: var(--dm-color); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border-left: 5px solid #555;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+        .card.good { border-left-color: var(--good-color); }
+        .card.evil { border-left-color: var(--evil-color); }
+        .card.neutral { border-left-color: var(--neutral-color); }
+        .card.info { border-left-color: var(--info-color); }
+        .card.dm { border-left-color: var(--dm-color); background-color: #241a22; }
+
+        .card-header {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .example {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-style: italic;
+            color: #b0bec5;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .example strong {
+            color: var(--text-main);
+            font-style: normal;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .limit {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: #2a2a35;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .rules-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rules-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .rules-list li::before {
+            content: '•';
+            color: var(--accent-color);
+            font-size: 2rem;
+            position: absolute;
+            left: 0;
+            top: -10px;
+        }
+        
+        .rules-list.dm-list li::before {
+            color: var(--dm-color);
+        }
+
+        .discord-tag {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        .highlight-text {
+            color: var(--info-color);
+            font-weight: bold;
+        }
+
+        a{
+            text-decoration: none;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🕵️‍♂️ Mafia: Kompendium</h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 10px;">Zasady gry dostosowane pod Voice Chat <span class="discord-tag"><a href="https://discord.gg/9u99x5CVWt">DISCORD</a></span></p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('info')">📝 Opis i Zasady</button>
+        <button class="tab-btn" onclick="switchTab('cards')">🎴 Karty / Benefity</button>
+        <button class="tab-btn" onclick="switchTab('roles')">🎭 Role w Grze</button>
+    </div>
+
+    <div class="container">
+        
+        <div id="info" class="tab-content active">
+
+            <h2 class="section-title info-title">🎯 Na czym polega gra i co trzeba robić?</h2>
+            <div class="card info" style="width: 100%; box-sizing: border-box;">
+                <p><strong>Mafia</strong> to gra o dedukcji, kłamstwie i przetrwaniu. Miasto zostało opanowane przez ukrytą Mafię. Nikt nie wie, kto jest kim – musisz ufać własnej intuicji i analizować to, co mówią inni.</p>
+                
+                <h3 style="color: var(--text-main); margin-top: 20px; border-bottom: 1px solid #333; padding-bottom: 5px;">Twój cel zależy od tego, kim jesteś:</h3>
+                <ul class="rules-list">
+                    <li><span class="highlight-text">Jako Cywil (Obywatel):</span> Twoim zadaniem jest wytropić i zabić Mafię w trakcie dziennych głosowań. Musisz słuchać innych na Voice Chacie, zadawać niewygodne pytania, wyłapywać kłamstwa i niespójności. Musisz przekonać resztę miasta, że jesteś po jasnej stronie i wspólnie wyeliminować wrogów, zanim oni wyeliminują Was nocą.</li>
+                    <li><span class="highlight-text">Jako Mafia (Zły):</span> Twoim celem jest pozbycie się Cywili, aż zostanie Was tyle samo co ich. W nocy potajemnie zabijacie. W dzień musisz perfekcyjnie kłamać – zachowywać się jak zwykły obywatel, brać udział w śledztwie, oskarżać niewinnych i chronić swoich wspólników, nie wzbudzając przy tym podejrzeń.</li>
+                    <li><span class="highlight-text">Jako rola Neutralna (np. Maniak, Joker):</span> Grasz tylko pod siebie. Masz własny, ukryty cel (np. zostać wyrzuconym na głosowaniu lub zabić wszystkich wokół). Wprowadzasz chaos do gry.</li>
+                </ul>
+            </div>
+            
+            <h2 class="section-title dm-title">💬 Komunikacja w Wiadomościach Prywatnych (DM)</h2>
+            <div class="card dm" style="width: 100%; box-sizing: border-box;">
+                <p>Na Discordzie sercem gry w nocy (oraz ukrytych akcji za dnia) są <strong>Wiadomości Prywatne do Mistrza Gry (prowadzącego)</strong>. Na głównym kanale głosowym gramy tylko za dnia. O czym musisz pamiętać?</p>
+                <ul class="rules-list dm-list">
+                    <li><strong>Zgłaszanie akcji:</strong> Jeśli w nocy używasz zdolności (Lekarz leczy, Detektyw sprawdza) – zawsze piszesz prywatną wiadomość do prowadzącego.</li>
+                    <li><strong>Używanie Kart:</strong> Jeśli używasz karty z benefitami (Ukrycie, Kradzież, Zamiana Głosu), również zgłaszasz to na DM do Prowadzącego, określając cel.</li>
+                    <li><strong>Odpowiedzi od prowadzącego:</strong> Prowadzący również odpowiada Ci w Wiadomości Prywatnej (np. z informacją, kim jest sprawdzana osoba, lub z potwierdzeniem akcji).</li>
+                </ul>
+            </div>
+
+            <h2 class="section-title info-title">🎧 Przebieg gry na Discordzie</h2>
+            <div class="grid">
+                <div class="card info">
+                    <div class="card-header">🌙 Faza Nocy (Mute & Deafen)</div>
+                    <div class="card-body">
+                        Prowadzący ogłasza nadejście nocy. Wszyscy gracze muszą natychmiast <strong>wyciszyć mikrofon i słuchawki (Mute & Deafen)</strong>.
+                        <ul>
+                            <li><strong>Mafia:</strong>Ustala cel na swoim prywatnym czacie tekstowym.</li>
+                            <li><strong>Role specjalne i Karty:</strong> Gracze wykonują swoje akcje, pisząc prywatną wiadomość (DM) do Prowadzącego (np. "Leczę @GraczX").</li>
+                            <li>Prowadzący odpisuje w wiadomości zwrotnej na DM każdemu graczowi.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card info">
+                    <div class="card-header">☀️ Faza Dnia (Voice Chat)</div>
+                    <div class="card-body">
+                        Prowadzący na czacie głównym ogłasza pobudkę. Wszyscy gracze <strong>odciszają słuchawki i mikrofony</strong>.
+                        <ul>
+                            <li><strong>Raport:</strong> Prowadzący głosowo ogłasza, co wydarzyło się w nocy.</li>
+                            <li><strong>Dyskusja:</strong> Cywile analizują wypowiedzi, zachowanie i barwę głosu na Voice Chacie. Nikt nie wie nic na pewno!</li>
+                            <li><strong>Głosowanie (Lincz):</strong> Gracze nominują osoby do eliminacji na głos lub na głównym kanale tekstowym. Kto zdobędzie najwięcej głosów, odpada z gry.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title info-title">⚖️ Złote Zasady Fair Play</h2>
+            <div class="card info" style="width: 100%; box-sizing: border-box;">
+                <ul class="rules-list">
+                    <li><strong>Ciszaw nocy:</strong> Gdy zapada noc, nikt nie może mówić z wyjątkiem prowadzącego.</li>
+                    <li><strong>Zero screen-share'a:</strong> Kategoryczny zakaz udostępniania ekranu podczas gry. Nikt nie może widzieć Twoich wiadomości DM z Prowadzącym ani Twojej karty roli.</li>
+                    <li><strong>Martwi milczą (Mute na zawsze):</strong> Jeśli zostaniesz wyeliminowany, Prowadzący przydzieli Ci rolę "Ducha". Musisz wyciszyć się do końca gry. Nie możesz podpowiadać ani odzywać się na VC. Zabrałeś swoją wiedzę do grobu.</li>
+                    <li><strong>Czas na interakcje:</strong> Jeśli nie napiszesz do prowadzącego w określonym przez niego czasie, twoja możliwość użycia karty/umiejętności przepada na dany dzień/noc.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="cards" class="tab-content">
+            <h2 class="section-title good-title">🟢 Dla Cywili / Dobrych</h2>
+            <div class="grid">
+                <div class="card good">
+                    <div class="card-header">🛡️ Tarcza</div>
+                    <div class="card-body">
+                        Możesz ochronić siebie lub wybraną osobę przed zabiciem przez mafię.
+                        <div class="example"><strong>💡 Jak użyć:</strong> Wysyłasz wiadomość DM do prowadzącego w nocy: "Używam Tarczy na @GraczX".</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card good">
+                    <div class="card-header">👁️ Wzrok detektywa</div>
+                    <div class="card-body">
+                        Możesz sprawdzić jedną osobę tej nocy – Prowadzący odpisze Ci w wiadomości: mafia / nie mafia.
+                        <div class="example"><strong>💡 Jak użyć:</strong> Piszesz do prowadzącego na DM w nocy: "Sprawdzam @Podejrzany". Otrzymasz prywatną odpowiedź od prowadzącego.</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card good">
+                    <div class="card-header">🤝 Ochrona obywateli</div>
+                    <div class="card-body">
+                        Jeśli na głosowaniu zostanie wybrany obywatel – nie odpada z gry.
+                        <div class="example"><strong>💡 Jak użyć:</strong> W fazie dnia, gdy wynik głosowania jest niekorzystny, deklarujesz jej użycie na kanale głosowym lub piszesz szybko do prowadzącego na DM.</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card good">
+                    <div class="card-header">🔥 Ostatnia szansa</div>
+                    <div class="card-body">
+                        Jeśli masz zostać wyeliminowany, możesz ujawnić swoją rolę na głosowym i przeżyć tę rundę. Prowadzący potwierdzi to reszcie.
+                        <div class="example"><strong>💡 Jak użyć:</strong> W fazie dnia, gdy przegrasz lincz, ogłaszasz na VC: "Jestem lekarzem, to Ostatnia Szansa!". prowadzący weryfikuje Twoją rolę.</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card good">
+                    <div class="card-header">🎤 Wywiad</div>
+                    <div class="card-body">
+                        Masz kartę Wywiad. Wskaż 3 osoby. Prowadzący odpisze, ile z nich jest mafią (nie mówi kto). Daje wskazówkę do dyskusji, ale nie ujawnia konkretnych osób.
+                        <div class="example"><strong>💡 Jak użyć:</strong> W nocy lub w dzień piszesz na DM do prowadzącego: "Używam karty Wywiad na graczach @GraczA, @GraczB i @GraczC". Prowadzący odpisuje Ci prywatnie np.: "Wśród tej trójki jest 1 członek mafii".</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title evil-title">🔴 Dla Mafii / Złych</h2>
+            <div class="grid">
+                <div class="card evil">
+                    <div class="card-header">🔪 Podwójne zabójstwo</div>
+                    <div class="card-body">
+                        Tej nocy mafia może zabić dwie osoby zamiast jednej.
+                        <div class="example"><strong>💡 Jak użyć:</strong> Uzgadniacie cel na kanale Mafii, po czym wysyłacie prowadzącemu na DM informację z dwoma nickami ofiar.</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card evil">
+                    <div class="card-header">🕶️ Ukrycie akcji</div>
+                    <div class="card-body">
+                        Wykonujesz akcję w nocy, ale obserwator nie widzi wyniku.
+                        <div class="example"><strong>💡 Jak użyć:</strong> Piszesz do prowadzącego w wiadomości DM: "Strzelam do @GraczY i odpalam Ukrycie akcji".</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card evil">
+                    <div class="card-header">🎭 Podstawiony trop</div>
+                    <div class="card-body">
+                        Sprawiasz, że jedna osoba wyjdzie jako „podejrzana” dla detektywa.
+                        <div class="example"><strong>💡 Jak użyć:</strong> W nocy wysyłasz na DM do Prowadzącego nick Cywila, który ma uchodzić za winnego.</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title neutral-title">⚖️ Karty Neutralne</h2>
+            <div class="grid">
+                <div class="card neutral">
+                    <div class="card-header">✝️ Wskrzeszenie</div>
+                    <div class="card-body">
+                        Wybierasz osobę, która ma wrócić do żywych z tą samą rolą.
+                        <div class="example"><strong>💡 Jak użyć:</strong> Piszesz w nocy DM do prowadzącego: "Wskrzeszam @ZabityGracz". Rano prowadzący informuje na VC, że gracz wraca do żywych.</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card neutral">
+                    <div class="card-header">🛑 Ochrona przed wyrzuceniem</div>
+                    <div class="card-body">
+                        Tego dnia nie możesz zostać wyrzucony na głosowaniu.
+                        <div class="example"><strong>💡 Jak użyć:</strong> Informujesz prowadzącego na DM lub ogłaszasz na VC w trakcie podliczania głosów przez miasto.</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card neutral">
+                    <div class="card-header">🗳️ Podwójny głos</div>
+                    <div class="card-body">
+                        Oddajesz dwa głosy na jedną osobę w tej turze.
+                        <div class="example"><strong>💡 Jak użyć:</strong> Deklarujesz swój podwójny głos na VC podczas linczu (bądź dyskretnie na DM u Prowadzącego, zależnie od ustaleń).</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card neutral">
+                    <div class="card-header">👻 Ukrycie</div>
+                    <div class="card-body">
+                        Jesteś niewidzialny przez dzień i noc – nic nie może ci się stać.
+                        <div class="example"><strong>💡 Jak użyć:</strong> Zgłaszasz na DM u Prowadzącego. Twoja postać staje się zablokowana do interakcji.</div>
+                    </div>
+                </div>
+                <div class="card neutral">
+                    <div class="card-header">📢 Wymuszenie głosu</div>
+                    <div class="card-body">
+                        Zmuszasz kogoś do zagłosowania na wybrany cel.
+                        <div class="example"><strong>💡 Jak użyć:</strong> Zgłaszasz na DM u prowadzącego. Prowadzący następnie instruuje ofiarę na DM, na kogo ma zagłosować.</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card neutral">
+                    <div class="card-header">🃏 Kradzież karty</div>
+                    <div class="card-body">
+                        Wybierasz osobę i przejmujesz jej kartę (jeśli ją ma).
+                        <div class="example"><strong>💡 Jak użyć:</strong> Piszesz w nocy do prowadzącego na DM: "Kradnę kartę @GraczX". Prowadzący wysyła mu info na DM o utracie.</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+                <div class="card neutral">
+                    <div class="card-header">🔄 Zamiana głosu</div>
+                    <div class="card-body">
+                        Możesz zmienić głos swój lub innej osoby podczas linczu.
+                        <div class="example"><strong>💡 Jak użyć:</strong> Piszesz błyskawicznie na DM do Prowadzącego, kogo głos chcesz podmienić i na kogo.</div>
+                        <span class="limit">Limit: 1 raz na grę</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="roles" class="tab-content">
+            <h2 class="section-title evil-title">🔴 Role Mafii</h2>
+            <div class="grid">
+                <div class="card evil">
+                    <div class="card-header">🔪 Mafia</div>
+                    <div class="card-body">
+                        Zabija w nocy, kłamie w dzień.
+                        <div class="example"><strong>💡 Komunikacja:</strong> Posiadacie swój własny czat grupowy (lub czat u prowadzącego), na którym w nocy wybieracie ofiarę i zgłaszacie ją prowadzącemu.</div>
+                    </div>
+                </div>
+                <div class="card evil">
+                    <div class="card-header">👑 Boss mafii</div>
+                    <div class="card-body">
+                        Niewykrywalny dla detektywa (Prowadzący odpisze mu "nie mafia").
+                        <div class="example"><strong>💡 Komunikacja:</strong> Tak samo jak zwykła Mafia, działa z grupy. Prowadzący dba o to, by przy sprawdzaniu na DM odpowiedzieć Detektywowi "Nie Mafia".</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title good-title">🟢 Role Cywili</h2>
+            <div class="grid">
+                <div class="card good">
+                    <div class="card-header">🕵️ Detektyw</div>
+                    <div class="card-body">
+                        Co noc sprawdza jedną osobę poprzez DM do Prowadzącego.
+                        <div class="example"><strong>💡 Komunikacja:</strong> W fazie nocy piszesz do prowadzącego w wiadomości prywatnej "Sprawdzam @GraczX". prowadzący w odpowiedzi odpisuje "To Mafia!" lub "To Cywil!".</div>
+                    </div>
+                </div>
+                <div class="card good">
+                    <div class="card-header">💉 Lekarz</div>
+                    <div class="card-body">
+                        Co noc chroni gracza przed śmiercią.
+                        <div class="example"><strong>💡 Komunikacja:</strong> W fazie nocy piszesz w DM do prowadzącego "Leczę @GraczY". Uleczony nie dostaje o tym żadnej powiadomki w nocy.</div>
+                    </div>
+                </div>
+                <div class="card good">
+                    <div class="card-header">🎯 Snajper</div>
+                    <div class="card-body">
+                        Może zabić raz w grze. Strzał w cywila lub neutrala -> śmierć snajpera, strzał w mafie -> żyjesz dalej.
+                        <div class="example"><strong>💡 Komunikacja:</strong> W nocy lub w dzień wysyłasz do prowadzącego na DM decyzję o oddaniu strzału w konkretnego gracza.</div>
+                    </div>
+                </div>
+                <div class="card good">
+                    <div class="card-header">👀 Obserwator</div>
+                    <div class="card-body">
+                        Dowiaduje się, czy dany gracz używał w nocy akcji.
+                        <div class="example"><strong>💡 Komunikacja:</strong> W nocy wysyłasz na DM do prowadzącego zapytanie. Prowadzący odpisuje prywatnie "Cel wykonywał akcję" lub "Cel nie robił nic".</div>
+                    </div>
+                </div>
+                <div class="card good">
+                    <div class="card-header">🙂 Cywil</div>
+                    <div class="card-body">
+                        Brak nocy. W dzień jego bronią jest Voice Chat.
+                        <div class="example"><strong>💡 Komunikacja:</strong> Jeśli nie masz na ręce karty do użycia, w nocy milczysz i nic nie wysyłasz do prowadzącego. Twoja cała gra to VC w dzień.</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title neutral-title">🟡 Role Neutralne</h2>
+            <div class="grid">
+                <div class="card neutral">
+                    <div class="card-header">🃏 Joker</div>
+                    <div class="card-body">
+                        Wygrywa tylko wtedy, gdy zostanie wyeliminowany podczas linczu.
+                        <div class="example"><strong>💡 Komunikacja:</strong> Nie masz nocnych akcji do zgłaszania u prowadzącego (chyba że masz karty). Twoim polem do działania są dyskusje na serwerze głosowym w dzień.</div>
+                    </div>
+                </div>
+                <div class="card neutral">
+                    <div class="card-header">🔪 Maniak</div>
+                    <div class="card-body">
+                        Gra sam na wszystkich. Musi zostać ostatnim żywym graczem na serwerze.
+                        <div class="example"><strong>💡 Komunikacja:</strong> Co noc w Wiadomości Prywatnej wskazujesz Prowadzącemu swoją ofiarę. Nie wie o tym ani miasto, ani mafia.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Ukryj wszystkie zakładki
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Dezaktywuj wszystkie przyciski
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Aktywuj wybraną zakładkę
+            document.getElementById(tabId).classList.add('active');
+            
+            // Znajdź przycisk, który został kliknięty i dodaj mu klasę active
+            const clickedBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
+                btn.getAttribute('onclick').includes(tabId)
+            );
+            if(clickedBtn) clickedBtn.classList.add('active');
+        }
+    </script>
+</body>
+</html>
